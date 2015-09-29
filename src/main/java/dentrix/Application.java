@@ -2,31 +2,37 @@ package dentrix;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
 public class Application {
+    @RestController
+    public static class PatientController {
 
+        @RequestMapping(value = "/patients", method = RequestMethod.POST)
+        public @ResponseBody
+        List<DentrixConnector.Patient> patients(){
+            try {
+                System.out.println("REST to dentix.");
+                DentrixConnector connector = new DentrixConnector("10.240.106.200", "kaKp6KxN", "C8gDK2N4H");
+                System.out.println("REST dentix completed.");
+                return connector.getPatients();
+            }catch(Exception e){
+                e.printStackTrace(System.err);
+                return new ArrayList<DentrixConnector.Patient>();
+            }
+        }
+
+    }
     public static void main(String[] args) {
         try {
-//            String query = "SELECT Name,Description,Qty,Cost FROM Stock";
-//            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//            Connection con = DriverManager.getConnection("jdbc:odbc:DSN=c-treeACE ODBC Driver;host=104.154.33.239;UID=kaKp6KxN;PWD=C8gDK2N4H;Database=DentrixSQL;port=6597;");
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(query);
-//            while (rs.next()) {
-//                String name = rs.getString("Name");
-//                String desc = rs.getString("Description");
-//                int qty = rs.getInt("Qty");
-//                float cost = rs.getFloat("Cost");
-//                System.out.println(name + ", " + desc + "\t: " + qty + "\t@ $" + cost);
-//            }
-//            con.close();
 
             // Set up connection
             System.out.println("Connecting to dentix.");

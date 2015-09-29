@@ -1,5 +1,8 @@
 package dentrix;
 
+import com.google.protobuf.Descriptors;
+import org.springframework.context.annotation.Bean;
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -151,29 +154,140 @@ public class DentrixConnector  {
 //        return notes;
 //    }
 //
-//    public List<Note> getAlertNotes(String patientID) throws SQLException {
-//        CallableStatement statement = connection.prepareCall("CALL admin.sp_getpatientmedicalalerts(?)");
-//
-//        statement.setString(1, patientID);
-//
-//        ResultSet results = statement.executeQuery();
-//
-//        List<Note> notes = new ArrayList<Note>();
-//
-//        while(results.next()) {
-//            String noteText = results.getString("med_alert");
-//
-//            Note note = Note.newBuilder()
-//                    .setNoteText(noteText)
-//                    .setNoteType(Note.NoteType.ALERT)
-//                    .build();
-//
-//            notes.add(note);
-//        }
-//
-//        results.close();
-//        statement.close();
-//
-//        return notes;
-//    }
+    public static class Note {
+
+    /**
+     * Protobuf enum {@code co.simplifeye.proto.Note.NoteType}
+     */
+    public static enum NoteType
+            implements com.google.protobuf.ProtocolMessageEnum {
+             /**
+         * <code>ALERT = 0;</code>
+         */
+        ALERT(0, 0) {
+                 @Override
+                 public Descriptors.EnumValueDescriptor getValueDescriptor() {
+                     return null;
+                 }
+
+                 @Override
+                 public Descriptors.EnumDescriptor getDescriptorForType() {
+                     return null;
+                 }
+             },
+        /**
+         * <code>NOTE = 1;</code>
+         */
+        NOTE(1, 1) {
+            @Override
+            public Descriptors.EnumValueDescriptor getValueDescriptor() {
+                return null;
+            }
+
+            @Override
+            public Descriptors.EnumDescriptor getDescriptorForType() {
+                return null;
+            }
+        },
+        /**
+         * <code>APPOINTMENT = 2;</code>
+         */
+        APPOINTMENT(2, 2) {
+            @Override
+            public Descriptors.EnumValueDescriptor getValueDescriptor() {
+                return null;
+            }
+
+            @Override
+            public Descriptors.EnumDescriptor getDescriptorForType() {
+                return null;
+            }
+        },;
+
+        /**
+         * <code>ALERT = 0;</code>
+         */
+        public static final int ALERT_VALUE = 0;
+        /**
+         * <code>NOTE = 1;</code>
+         */
+        public static final int NOTE_VALUE = 1;
+        /**
+         * <code>APPOINTMENT = 2;</code>
+         */
+        public static final int APPOINTMENT_VALUE = 2;
+
+
+        public final int getNumber() { return value; }
+
+        public static NoteType valueOf(int value) {
+            switch (value) {
+                case 0: return ALERT;
+                case 1: return NOTE;
+                case 2: return APPOINTMENT;
+                default: return null;
+            }
+        }
+
+
+
+
+        private final int index;
+        private final int value;
+
+        private NoteType(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:co.simplifeye.proto.Note.NoteType)
+    }
+
+
+            String noteText;
+
+    public NoteType getNoteType() {
+        return noteType;
+    }
+
+    public void setNoteType(NoteType noteType) {
+        this.noteType = noteType;
+    }
+
+    NoteType noteType;
+
+    public String getNoteText() {
+        return noteText;
+    }
+
+    public void setNoteText(String noteText) {
+        this.noteText = noteText;
+    }
+
+
+}
+    public List<Note> getAlertNotes(String patientID) throws SQLException {
+        CallableStatement statement = connection.prepareCall("CALL admin.sp_getpatientmedicalalerts(?)");
+
+        statement.setString(1, patientID);
+
+        ResultSet results = statement.executeQuery();
+
+        List<Note> notes = new ArrayList<Note>();
+
+        while(results.next()) {
+            String noteText = results.getString("med_alert");
+
+            Note note = new Note();
+            note.setNoteText(noteText);
+            note.setNoteType(Note.NoteType.ALERT) ;
+
+            notes.add(note);
+        }
+
+        results.close();
+        statement.close();
+
+        return notes;
+    }
 }
