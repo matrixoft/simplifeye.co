@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 @SpringBootApplication
 public class Application {
@@ -28,8 +29,13 @@ public class Application {
 //            con.close();
 
             // Set up connection
+            System.out.println("Connecting to dentix.");
             DentrixConnector connector = new DentrixConnector("10.240.106.200", "kaKp6KxN", "C8gDK2N4H");
             System.out.println("Connection completed.");
+            List<DentrixConnector.Patient> patientsList = connector.getPatients();
+            for(DentrixConnector.Patient p : patientsList){
+                System.out.println(p.getId()+" "+p.getName()+" "+p.getLocation());
+            }
 
         }catch (Exception e){
             e.printStackTrace(System.err);
