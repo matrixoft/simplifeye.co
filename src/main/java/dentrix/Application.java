@@ -16,7 +16,7 @@ public class Application {
     @RestController
     public static class PatientController {
 
-        @RequestMapping(value = "/patients", method = RequestMethod.POST)
+        @RequestMapping(value = "/patients", method = RequestMethod.GET)
         public @ResponseBody
         List<DentrixConnector.Patient> patients(){
             try {
